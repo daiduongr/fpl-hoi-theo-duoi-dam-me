@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hội theo đuổi đam mê</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: màu Premier League — băng tím đậm ở đầu trang, xanh neon cho tiền đã nhận, xanh ngọc cho tiền tạm tính, hồng cho số âm */
+:root {
+  --bg: #F6F2F7; --surface: #FFFFFF; --ink: #37003C; --muted: #6E5A72; --line: #E7DCEA;
+  --hero: #37003C; --hero-ink: #FFFFFF; --hero-muted: #D9C6DD; --neon: #00FF85; --cyan: #04F5FF; --magenta: #E90052;
+  --pitch: #E90052; --pitch-soft: #FCE3EE; --gold: #00894A; --gold-soft: #00FF85; --chip-ink: #37003C;
+  --silver-soft: #EEE7F0; --bronze-soft: #F4E3EC; --pos: #00894A; --neg: #E90052;
+  --pend: #00759E; --pend-soft: #DDF6FD;
+  --display: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #19001C; --surface: #250029; --ink: #F5ECF6; --muted: #BBA3C0; --line: #42164A;
+  --hero: #37003C; --hero-ink: #FFFFFF; --hero-muted: #D9C6DD;
+  --pitch: #FF4D8F; --pitch-soft: #4A0631; --gold: #00FF85; --gold-soft: #00FF85; --chip-ink: #37003C;
+  --silver-soft: #36103D; --bronze-soft: #3F0E35; --pos: #00FF85; --neg: #FF4D8F;
+  --pend: #04F5FF; --pend-soft: #0B2D3A; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #19001C; --surface: #250029; --ink: #F5ECF6; --muted: #BBA3C0; --line: #42164A;
+  --hero: #37003C; --hero-ink: #FFFFFF; --hero-muted: #D9C6DD;
+  --pitch: #FF4D8F; --pitch-soft: #4A0631; --gold: #00FF85; --gold-soft: #00FF85; --chip-ink: #37003C;
+  --silver-soft: #36103D; --bronze-soft: #3F0E35; --pos: #00FF85; --neg: #FF4D8F;
+  --pend: #04F5FF; --pend-soft: #0B2D3A; color-scheme: dark }
+
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--body); }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 64px; display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; margin: 0; text-wrap: balance; letter-spacing: -.02em; }
+h1 { font-size: clamp(34px, 7vw, 60px); line-height: 1; }
+h2 { font-size: 26px; }
+h3 { font-size: 18px; font-weight: 700; }
+.eyebrow { font: 600 12px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--pitch); }
+.muted { color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; }
+header { display: grid; gap: 14px; background: var(--hero); color: var(--hero-ink); border-radius: 10px; padding: 32px clamp(20px, 4vw, 40px); position: relative; overflow: hidden; }
+header::after { content: ""; position: absolute; right: -90px; top: -90px; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, var(--cyan), var(--neon) 45%, transparent 70%); opacity: .4; pointer-events: none; }
+header > * { position: relative; z-index: 1; }
+header .eyebrow { color: var(--neon); }
+header .meta { color: var(--hero-muted); }
+header .live { color: var(--neon); }
+header .live::before { background: var(--neon); }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--muted); font-size: 14px; }
+.live { display: inline-flex; align-items: center; gap: 6px; color: var(--gold); font-weight: 600; }
+.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+.strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-block: 3px solid var(--ink); }
+.strip div { padding: 14px 16px 14px 0; display: grid; gap: 2px; }
+.strip b { font: 800 30px/1 var(--display); letter-spacing: -.02em; }
+.strip span { font-size: 13px; color: var(--muted); }
+section { display: grid; gap: 16px; min-width: 0; }
+.sec-head { display: grid; gap: 4px; }
+.sec-head p { margin: 0; color: var(--muted); max-width: 65ch; }
+.scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { padding: 10px 12px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+th { font: 600 12px/1.2 var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
+tbody tr:last-child td { border-bottom: 0; }
+th:first-child, td:first-child { text-align: left; }
+td.who { display: flex; flex-direction: column; gap: 0; }
+td.who b { font-weight: 600; }
+td.who small { color: var(--muted); font-size: 12px; }
+.pos { color: var(--pos); font-weight: 600; } .neg { color: var(--neg); font-weight: 600; }
+.sub { display: block; font-size: 12px; color: var(--muted); }
+.rk { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font: 700 13px/1 var(--display); background: var(--silver-soft); }
+.cell { display: grid; gap: 2px; justify-items: end; }
+.cell .amt { font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 3px; }
+.p1 .amt { background: var(--gold-soft); color: var(--chip-ink); }
+.p2 .amt { background: var(--silver-soft); color: var(--ink); }
+.p3 .amt { background: var(--bronze-soft); color: var(--ink); }
+.p1 .pts { color: var(--gold); font-weight: 700; }
+th.livecol { color: var(--pend); }
+.cell .amt.pend, .p1 .amt.pend, .p2 .amt.pend, .p3 .amt.pend { background: transparent; color: var(--pend); outline: 1px dashed var(--pend); outline-offset: -1px; }
+ol.board li .money.pend { color: var(--pend); font-weight: 500; }
+td.pendcol { color: var(--pend); }
+td.proj { opacity: .8; }
+th button { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+th button::after { content: "↕"; font-size: 11px; opacity: .45; }
+th[aria-sort="ascending"] button::after { content: "↑"; opacity: 1; }
+th[aria-sort="descending"] button::after { content: "↓"; opacity: 1; }
+th[aria-sort] { color: var(--ink); }
+th button:focus-visible { outline: 2px solid var(--pitch); outline-offset: 2px; }
+tfoot td { border-top: 2px solid var(--line); border-bottom: 0; }
+td.pendcol .sub { color: var(--pend); opacity: .85; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { font-style: normal; font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 3px; }
+.legend .got { background: var(--gold-soft); color: var(--chip-ink); }
+.legend .pend { color: var(--pend); outline: 1px dashed var(--pend); outline-offset: -1px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.tag { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; white-space: nowrap; }
+.tag.done { background: var(--pitch-soft); color: var(--pitch); }
+.tag.live { background: var(--pend-soft); color: var(--pend); }
+.tag.up { background: var(--silver-soft); color: var(--muted); }
+ol.board { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+ol.board li { display: grid; grid-template-columns: 26px 1fr auto auto; gap: 10px; align-items: center; font-variant-numeric: tabular-nums; }
+ol.board li .money { min-width: 46px; text-align: right; font-weight: 600; color: var(--gold); }
+ol.board li .money.zero { color: transparent; }
+.upcoming { display: flex; flex-wrap: wrap; gap: 8px; }
+.upcoming span { font-size: 13px; padding: 4px 10px; border: 1px dashed var(--line); border-radius: 3px; color: var(--muted); }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.rules ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+.note { font-size: 13px; color: var(--muted); max-width: 70ch; margin: 0; }
+footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+a { color: var(--pitch); }
+a.player { color: inherit; text-decoration: none; }
+a.player:hover, a.player:focus-visible { color: var(--pitch); }
+.medal { font-size: 1.05em; line-height: 1; margin-left: 2px; cursor: default; }
+:focus-visible { outline: 2px solid var(--pitch); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow" id="eyebrow">Fantasy Premier League 2026/27</div>
+    <h1 id="title">Hội theo đuổi đam mê</h1>
+    <div class="meta" id="meta"></div>
+  </header>
+  <div class="strip" id="strip"></div>
+  <div class="legend"><span><i class="got">100k</i> Đã nhận, tiền đã chốt</span><span><i class="pend">100k</i> Chưa nhận, tạm tính theo thứ hạng hiện tại</span></div>
+
+  <section>
+    <div class="sec-head">
+      <h2>Sổ tiền</h2>
+      <p>Đơn vị nghìn đồng. Realized là tiền đã chốt. Unrealized là các giải chưa chốt, tính như thể mùa giải dừng ở thứ hạng hiện tại. Bấm vào tiêu đề cột để sắp xếp.</p>
+    </div>
+    <div class="scroll"><table id="ledger"></table></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Đóng lượt về</h2>
+      <p>Đóng sau GW19. Mỗi người đóng 500k trừ đi số tiền đã thắng ở lượt đi (tuần, tháng và giải lượt đi; không tính bounty). Tính theo phía người chơi: <span class="neg">−</span> là phải đóng thêm, <span class="pos">+</span> là được nhận lại.</p>
+    </div>
+    <div class="scroll"><table id="payment"></table></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Giải tuần</h2>
+      <p>Mỗi GW: nhất 100k, nhì 30k, ba 15k. Điểm đã trừ phí chuyển nhượng. Đồng hạng thì chia đều tổng giải của các vị trí bị chiếm.</p>
+    </div>
+    <div class="scroll"><table id="weeks"></table></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Giải tháng</h2>
+      <p>Theo lịch tháng chính thức của FPL. Nhất 50k, nhì 25k, ba 10k. Tiền chỉ được chốt khi tất cả GW trong tháng đá xong.</p>
+    </div>
+    <div class="grid" id="months"></div>
+    <div class="upcoming" id="upcoming"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Giải lớn cuối mùa</h2>
+      <p>Chưa chốt. Bảng dưới là ai đang dẫn tới thời điểm này.</p>
+    </div>
+    <div class="grid" id="races"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Luật chia thưởng</h2></div>
+    <div class="rules" id="rules"></div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const DATA = {"league": {"id": 141084, "name": "Hội theo đuổi đam mê"}, "updated": "20:30, 13/10/2026", "current_gw": 6, "current_finished": true, "next_deadline": "2026-10-17T10:00:00Z", "players": [{"id": 439704, "nick": "Trung", "name": "Trung Tran", "team": "Lisandro", "total": 460, "overall_rank": 39748, "value": 101.7, "bank": 2.7, "gw": {"1": 67, "2": 113, "3": 60, "4": 91, "5": 53, "6": 76}}, {"id": 229859, "nick": "Dương", "name": "Dai Duong Le", "team": "This is our year", "total": 449, "overall_rank": 106151, "value": 101.8, "bank": 0.1, "gw": {"1": 74, "2": 104, "3": 41, "4": 84, "5": 62, "6": 84}}, {"id": 443742, "nick": "Hoàng", "name": "Jethro DD", "team": "Noni Maduekeke", "total": 441, "overall_rank": 190882, "value": 102.0, "bank": 0.0, "gw": {"1": 61, "2": 110, "3": 49, "4": 90, "5": 59, "6": 72}}, {"id": 1046607, "nick": "Hinh", "name": "Hinh Dinh Quang", "team": "Lucky Year", "total": 410, "overall_rank": 1078273, "value": 100.7, "bank": 2.7, "gw": {"1": 42, "2": 132, "3": 45, "4": 78, "5": 40, "6": 73}}, {"id": 3187181, "nick": "Toàn", "name": "Toan Chu", "team": "COYG_Toàn Chu", "total": 402, "overall_rank": 1460773, "value": 100.5, "bank": 0.4, "gw": {"1": 47, "2": 117, "3": 55, "4": 84, "5": 45, "6": 54}}, {"id": 3179617, "nick": "Hải", "name": "Hai Nguyen", "team": "HaiNguyen", "total": 365, "overall_rank": 4012655, "value": 100.3, "bank": 0.7, "gw": {"1": 46, "2": 91, "3": 52, "4": 67, "5": 54, "6": 55}}, {"id": 3179102, "nick": "Tuấn", "name": "Nguyen Thanh Tuan", "team": "Kazan", "total": 341, "overall_rank": 5833929, "value": 99.3, "bank": 0.3, "gw": {"1": 39, "2": 96, "3": 34, "4": 73, "5": 76, "6": 23}}, {"id": 3179539, "nick": "Bàng", "name": "Jurgen Phạm", "team": "The FPL left me", "total": 340, "overall_rank": 5905035, "value": 99.7, "bank": 0.0, "gw": {"1": 44, "2": 73, "3": 64, "4": 61, "5": 58, "6": 40}}, {"id": 4300857, "nick": "Hiếu Lê", "name": "Vincent Le", "team": "Vincent's Team", "total": 326, "overall_rank": 6823797, "value": 100.2, "bank": 0.5, "gw": {"1": 28, "2": 77, "3": 61, "4": 62, "5": 57, "6": 41}}], "weeks": [{"gw": 1, "finished": true, "scores": {"439704": 67, "229859": 74, "443742": 61, "1046607": 42, "3187181": 47, "3179617": 46, "3179102": 39, "3179539": 44, "4300857": 28}, "prizes": {"439704": 30.0, "229859": 100.0, "443742": 15.0, "1046607": 0.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "rank": {"439704": 2, "229859": 1, "443742": 3, "1046607": 7, "3187181": 4, "3179617": 5, "3179102": 8, "3179539": 6, "4300857": 9}}, {"gw": 2, "finished": true, "scores": {"439704": 113, "229859": 104, "443742": 110, "1046607": 132, "3187181": 117, "3179617": 91, "3179102": 96, "3179539": 73, "4300857": 77}, "prizes": {"439704": 15.0, "229859": 0.0, "443742": 0.0, "1046607": 100.0, "3187181": 30.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "rank": {"439704": 3, "229859": 5, "443742": 4, "1046607": 1, "3187181": 2, "3179617": 7, "3179102": 6, "3179539": 9, "4300857": 8}}, {"gw": 3, "finished": true, "scores": {"439704": 60, "229859": 41, "443742": 49, "1046607": 45, "3187181": 55, "3179617": 52, "3179102": 34, "3179539": 64, "4300857": 61}, "prizes": {"439704": 15.0, "229859": 0.0, "443742": 0.0, "1046607": 0.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 100.0, "4300857": 30.0}, "rank": {"439704": 3, "229859": 8, "443742": 6, "1046607": 7, "3187181": 4, "3179617": 5, "3179102": 9, "3179539": 1, "4300857": 2}}, {"gw": 4, "finished": true, "scores": {"439704": 91, "229859": 84, "443742": 90, "1046607": 78, "3187181": 84, "3179617": 67, "3179102": 73, "3179539": 61, "4300857": 62}, "prizes": {"439704": 100.0, "229859": 7.5, "443742": 30.0, "1046607": 0.0, "3187181": 7.5, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "rank": {"439704": 1, "229859": 3, "443742": 2, "1046607": 5, "3187181": 3, "3179617": 7, "3179102": 6, "3179539": 9, "4300857": 8}}, {"gw": 5, "finished": true, "scores": {"439704": 53, "229859": 62, "443742": 59, "1046607": 40, "3187181": 45, "3179617": 54, "3179102": 76, "3179539": 58, "4300857": 57}, "prizes": {"439704": 0.0, "229859": 30.0, "443742": 15.0, "1046607": 0.0, "3187181": 0.0, "3179617": 0.0, "3179102": 100.0, "3179539": 0.0, "4300857": 0.0}, "rank": {"439704": 7, "229859": 2, "443742": 3, "1046607": 9, "3187181": 8, "3179617": 6, "3179102": 1, "3179539": 4, "4300857": 5}}, {"gw": 6, "finished": true, "scores": {"439704": 76, "229859": 84, "443742": 72, "1046607": 73, "3187181": 54, "3179617": 55, "3179102": 23, "3179539": 40, "4300857": 41}, "prizes": {"439704": 30.0, "229859": 100.0, "443742": 0.0, "1046607": 15.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "rank": {"439704": 2, "229859": 1, "443742": 4, "1046607": 3, "3187181": 6, "3179617": 5, "3179102": 9, "3179539": 8, "4300857": 7}}], "months": [{"name": "Tháng 8", "start": 1, "stop": 2, "status": "done", "totals": {"439704": 180, "229859": 178, "443742": 171, "1046607": 174, "3187181": 164, "3179617": 137, "3179102": 135, "3179539": 117, "4300857": 105}, "prizes": {"439704": 50.0, "229859": 25.0, "443742": 0.0, "1046607": 10.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "rank": {"439704": 1, "229859": 2, "443742": 4, "1046607": 3, "3187181": 5, "3179617": 6, "3179102": 7, "3179539": 8, "4300857": 9}}, {"name": "Tháng 9", "start": 3, "stop": 5, "status": "done", "totals": {"439704": 204, "229859": 187, "443742": 198, "1046607": 163, "3187181": 184, "3179617": 173, "3179102": 183, "3179539": 183, "4300857": 180}, "prizes": {"439704": 50.0, "229859": 10.0, "443742": 25.0, "1046607": 0.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "rank": {"439704": 1, "229859": 3, "443742": 2, "1046607": 9, "3187181": 4, "3179617": 8, "3179102": 5, "3179539": 5, "4300857": 7}}, {"name": "Tháng 10", "start": 6, "stop": 9, "status": "live", "totals": {"439704": 76, "229859": 84, "443742": 72, "1046607": 73, "3187181": 54, "3179617": 55, "3179102": 23, "3179539": 40, "4300857": 41}, "prizes": {"439704": 25.0, "229859": 50.0, "443742": 0.0, "1046607": 10.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "rank": {"439704": 2, "229859": 1, "443742": 4, "1046607": 3, "3187181": 6, "3179617": 5, "3179102": 9, "3179539": 8, "4300857": 7}}, {"name": "Tháng 11", "start": 10, "stop": 12, "status": "upcoming", "totals": {}, "prizes": {}, "rank": {}}, {"name": "Tháng 12", "start": 13, "stop": 18, "status": "upcoming", "totals": {}, "prizes": {}, "rank": {}}, {"name": "Tháng 1", "start": 19, "stop": 23, "status": "upcoming", "totals": {}, "prizes": {}, "rank": {}}, {"name": "Tháng 2", "start": 24, "stop": 27, "status": "upcoming", "totals": {}, "prizes": {}, "rank": {}}, {"name": "Tháng 3", "start": 28, "stop": 30, "status": "upcoming", "totals": {}, "prizes": {}, "rank": {}}, {"name": "Tháng 4", "start": 31, "stop": 33, "status": "upcoming", "totals": {}, "prizes": {}, "rank": {}}, {"name": "Tháng 5", "start": 34, "stop": 38, "status": "upcoming", "totals": {}, "prizes": {}, "rank": {}}], "money": [{"id": 439704, "realized": {"week": 190.0, "month": 100.0}, "unrealized": {"month": 25.0, "half1": 300.0, "season": 500.0, "bounty": 150.0}, "first_half_realized": 290.0, "first_half_unrealized": 325.0, "realized_total": 290.0, "unrealized_total": 975.0, "second_payment": 210.0, "second_payment_projected": -115.0, "net": -760.0}, {"id": 229859, "realized": {"week": 237.5, "month": 35.0}, "unrealized": {"month": 50.0, "half1": 150.0, "season": 250.0, "bounty": 150.0}, "first_half_realized": 272.5, "first_half_unrealized": 200.0, "realized_total": 272.5, "unrealized_total": 600.0, "second_payment": 227.5, "second_payment_projected": 27.5, "net": -777.5}, {"id": 443742, "realized": {"week": 60.0, "month": 25.0}, "unrealized": {"half1": 60.0, "season": 120.0, "team_value": 150.0, "bounty": 150.0}, "first_half_realized": 85.0, "first_half_unrealized": 60.0, "realized_total": 85.0, "unrealized_total": 480.0, "second_payment": 415.0, "second_payment_projected": 355.0, "net": -965.0}, {"id": 1046607, "realized": {"week": 115.0, "month": 10.0}, "unrealized": {"month": 10.0, "high_week": 150.0}, "first_half_realized": 125.0, "first_half_unrealized": 10.0, "realized_total": 125.0, "unrealized_total": 160.0, "second_payment": 375.0, "second_payment_projected": 365.0, "net": -925.0}, {"id": 3187181, "realized": {"week": 37.5}, "unrealized": {}, "first_half_realized": 37.5, "first_half_unrealized": 0.0, "realized_total": 37.5, "unrealized_total": 0, "second_payment": 462.5, "second_payment_projected": 462.5, "net": -1012.5}, {"id": 3179617, "realized": {}, "unrealized": {}, "first_half_realized": 0.0, "first_half_unrealized": 0.0, "realized_total": 0, "unrealized_total": 0, "second_payment": 500.0, "second_payment_projected": 500.0, "net": -1050}, {"id": 3179102, "realized": {"week": 100.0}, "unrealized": {}, "first_half_realized": 100.0, "first_half_unrealized": 0.0, "realized_total": 100.0, "unrealized_total": 0, "second_payment": 400.0, "second_payment_projected": 400.0, "net": -950.0}, {"id": 3179539, "realized": {"week": 100.0}, "unrealized": {}, "first_half_realized": 100.0, "first_half_unrealized": 0.0, "realized_total": 100.0, "unrealized_total": 0, "second_payment": 400.0, "second_payment_projected": 400.0, "net": -950.0}, {"id": 4300857, "realized": {"week": 30.0}, "unrealized": {}, "first_half_realized": 30.0, "first_half_unrealized": 0.0, "realized_total": 30.0, "unrealized_total": 0, "second_payment": 470.0, "second_payment_projected": 470.0, "net": -1020.0}], "races": {"first_half": {"totals": {"439704": 460, "229859": 449, "443742": 441, "1046607": 410, "3187181": 402, "3179617": 365, "3179102": 341, "3179539": 340, "4300857": 326}, "rank": {"439704": 1, "229859": 2, "443742": 3, "1046607": 4, "3187181": 5, "3179617": 6, "3179102": 7, "3179539": 8, "4300857": 9}, "prizes": {"439704": 300.0, "229859": 150.0, "443742": 60.0, "1046607": 0.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "started": true}, "second_half": {"totals": {"439704": 0, "229859": 0, "443742": 0, "1046607": 0, "3187181": 0, "3179617": 0, "3179102": 0, "3179539": 0, "4300857": 0}, "rank": {"439704": 1, "229859": 1, "443742": 1, "1046607": 1, "3187181": 1, "3179617": 1, "3179102": 1, "3179539": 1, "4300857": 1}, "prizes": {}, "started": false}, "season": {"totals": {"439704": 460, "229859": 449, "443742": 441, "1046607": 410, "3187181": 402, "3179617": 365, "3179102": 341, "3179539": 340, "4300857": 326}, "rank": {"439704": 1, "229859": 2, "443742": 3, "1046607": 4, "3187181": 5, "3179617": 6, "3179102": 7, "3179539": 8, "4300857": 9}, "prizes": {"439704": 500.0, "229859": 250.0, "443742": 120.0, "1046607": 0.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "started": true}}, "value_prizes": {"439704": 0.0, "229859": 0.0, "443742": 150.0, "1046607": 0.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "high_week_prizes": {"439704": 0.0, "229859": 0.0, "443742": 0.0, "1046607": 150.0, "3187181": 0.0, "3179617": 0.0, "3179102": 0.0, "3179539": 0.0, "4300857": 0.0}, "high_week": {"points": 132, "id": 1046607, "gw": 2}, "bounty": {"pool": 450, "qualified": [439704, 229859, 443742], "threshold": 500000}, "rules": {"week": [100, 30, 15], "month": [50, 25, 10], "half": [300, 150, 60], "season": [500, 250, 120], "cup": [150, 75], "team_value": 150, "high_week": 150, "bounty": 50, "buy_in_first": 550, "buy_in_second": 500}};
+const P = Object.fromEntries(DATA.players.map(p => [String(p.id), p]));
+const R = DATA.rules;
+const fmt = v => (Math.round(v * 10) / 10).toLocaleString("vi-VN") + "k";
+const signed = v => (v > 0 ? "+" : v < 0 ? "−" : "") + fmt(Math.abs(v));
+const el = (id, html) => { document.getElementById(id).innerHTML = html; };
+const nick = id => P[String(id)].nick;
+// Biểu tượng cho top 3 tổng điểm cả mùa (đồng điểm thì cùng biểu tượng)
+const MEDALS = { 1: ["🏆", "Dẫn đầu tổng điểm"], 2: ["🥈", "Hạng 2 tổng điểm"], 3: ["🥉", "Hạng 3 tổng điểm"] };
+const seasonRank = id => 1 + DATA.players.filter(p => p.total > P[String(id)].total).length;
+const badge = id => { const m = MEDALS[seasonRank(id)]; return m ? ` <span class="medal" title="${m[1]}" aria-label="${m[1]}">${m[0]}</span>` : ""; };
+const profile = id => `https://fantasy.premierleague.com/entry/${id}/history`;
+const who = id => `<a class="player" href="${profile(id)}" target="_blank" rel="noopener" title="Xem profile FPL của ${nick(id)}">${nick(id)}</a>${badge(id)}`;
+const prizeTotal = R.week[0]*38 + R.week[1]*38 + R.week[2]*38 + (R.month[0]+R.month[1]+R.month[2])*10
+  + (R.half[0]+R.half[1]+R.half[2])*2 + R.season.reduce((a,b)=>a+b,0) + R.cup.reduce((a,b)=>a+b,0)*2
+  + R.team_value + R.high_week;
+
+// Header
+const cur = DATA.current_gw;
+document.getElementById("eyebrow").textContent = `Fantasy Premier League 2026/27 · League ${DATA.league.id}`;
+document.getElementById("title").textContent = DATA.league.name.replace(/\s*\d+$/, "");
+el("meta", `<span>Cập nhật ${DATA.updated} (giờ VN)</span>` +
+  (cur && !DATA.current_finished ? `<span class="live">GW${cur} chưa chốt điểm, tiền tuần này là tạm tính</span>` : `<span>Đã chốt đến GW${cur}</span>`));
+
+const doneWeeks = DATA.weeks.filter(w => w.finished).length;
+const doneMonths = DATA.months.filter(m => m.status === "done").length;
+const paidOut = DATA.money.reduce((a, r) => a + r.realized_total, 0);
+el("strip", [
+  [fmt(prizeTotal), "Quỹ thưởng cả mùa"],
+  [fmt(paidOut), `Đã chốt (${doneWeeks} tuần, ${doneMonths} tháng)`],
+  [fmt(DATA.bounty.pool), `Quỹ bounty, ${DATA.bounty.qualified.length} người đang đạt`],
+  [String(DATA.players.length), "Người chơi"],
+].map(([b, s]) => `<div><b class="num">${b}</b><span>${s}</span></div>`).join(""));
+
+// Ledger
+const CAT = { week: "tuần", month: "tháng", half1: "lượt đi", half2: "lượt về", season: "cả mùa",
+  team_value: "giá trị đội", high_week: "điểm tuần cao nhất", bounty: "bounty" };
+const parts = obj => Object.entries(obj).map(([k, v]) => `${CAT[k] || k} ${fmt(v)}`).join(" · ");
+const tone = v => v > 0 ? "pos" : v < 0 ? "neg" : "";
+const ledger = [...DATA.money].sort((a, b) => b.realized_total - a.realized_total || b.unrealized_total - a.unrealized_total);
+el("ledger", `<thead><tr><th>#</th><th style="text-align:left">Người chơi</th><th>Realized</th><th>Unrealized</th><th>Tổng thưởng</th></tr></thead><tbody>` +
+  ledger.map((r, i) => {
+    const p = P[String(r.id)];
+    return `<tr><td data-v="${i + 1}"><span class="rk">${i + 1}</span></td>
+      <td class="who" data-v="${p.nick}"><b>${who(p.id)}</b><small>${p.team}</small></td>
+      <td data-v="${r.realized_total}"><b>${fmt(r.realized_total)}</b>${r.realized_total ? `<span class="sub">${parts(r.realized)}</span>` : ""}</td>
+      <td data-v="${r.unrealized_total}" class="pendcol">${fmt(r.unrealized_total)}${r.unrealized_total ? `<span class="sub">${parts(r.unrealized)}</span>` : ""}</td>
+      <td data-v="${r.realized_total + r.unrealized_total}">${fmt(r.realized_total + r.unrealized_total)}</td></tr>`;
+  }).join("") + `</tbody>`);
+
+// Payment: theo phía người chơi, âm = phải đóng, dương = được nhận lại
+const pay = [...DATA.money].sort((a, b) => b.second_payment - a.second_payment);
+const sumBy = f => pay.reduce((a, r) => a + f(r), 0);
+const payCell = (v, extra = "") => `<td data-v="${-v}" class="${tone(-v)} ${extra}">${signed(-v)}</td>`;
+el("payment", `<thead><tr><th style="text-align:left">Người chơi</th><th>Đã đóng đầu mùa</th><th>Thắng lượt đi (đã chốt)</th><th>Lượt về (tính đến nay)</th><th>Dự kiến nếu giữ hạng</th></tr></thead><tbody>` +
+  pay.map(r => `<tr><td data-v="${nick(r.id)}"><b>${who(r.id)}</b></td>
+    <td data-v="${R.buy_in_first}">${fmt(R.buy_in_first)}</td>
+    <td data-v="${r.first_half_realized}">${fmt(r.first_half_realized)}</td>
+    ${payCell(r.second_payment)}
+    ${payCell(r.second_payment_projected, "proj")}</tr>`).join("") +
+  `</tbody><tfoot><tr><td><b>Tổng</b></td><td>${fmt(R.buy_in_first * pay.length)}</td><td>${fmt(sumBy(r => r.first_half_realized))}</td>${payCell(sumBy(r => r.second_payment))}${payCell(sumBy(r => r.second_payment_projected), "proj")}</tr></tfoot>`);
+
+// Weeks
+const order = [...DATA.players].sort((a, b) => b.total - a.total).map(p => String(p.id));
+const weekMoney = id => DATA.weeks.reduce((a, w) => a + w.prizes[id], 0);
+el("weeks", `<thead><tr><th>Người chơi</th>${DATA.weeks.map(w => `<th class="${w.finished ? "" : "livecol"}">GW${w.gw}${w.finished ? "" : " ·"}</th>`).join("")}<th>Tổng điểm</th><th>Tiền tuần</th></tr></thead><tbody>` +
+  order.map(id => `<tr><td data-v="${nick(id)}"><b>${who(id)}</b></td>${DATA.weeks.map(w => {
+    const rk = w.rank[id], amt = w.prizes[id];
+    return `<td data-v="${w.scores[id]}" class="${amt ? "p" + Math.min(rk, 3) : ""}"><div class="cell"><span class="pts">${w.scores[id]}</span>${amt ? `<span class="amt${w.finished ? "" : " pend"}">${fmt(amt)}</span>` : ""}</div></td>`;
+  }).join("")}<td data-v="${P[id].total}">${P[id].total}</td><td data-v="${weekMoney(id)}"><b>${fmt(weekMoney(id))}</b></td></tr>`).join("") + `</tbody>`);
+
+// Months
+const board = (totals, rank, prizes, unit, pending) => `<ol class="board">${Object.keys(totals).sort((a, b) => totals[b] - totals[a]).map(id => {
+  const m = prizes ? prizes[id] || 0 : 0;
+  return `<li><span class="rk">${rank[id]}</span><span>${who(id)}</span><span class="num muted">${totals[id]}${unit || ""}</span><span class="money ${m ? (pending ? "pend" : "") : "zero"}">${m ? fmt(m) : "–"}</span></li>`;
+}).join("")}</ol>`;
+const tag = s => s === "done" ? `<span class="tag done">Đã chốt</span>` : s === "live" ? `<span class="tag live">Đang diễn ra</span>` : `<span class="tag up">Chưa đá</span>`;
+el("months", DATA.months.filter(m => m.status !== "upcoming").map(m => {
+  return `<div class="card"><div class="card-head"><h3>${m.name}</h3>${tag(m.status)}</div>
+    <div class="muted" style="font-size:13px">GW${m.start}–${m.stop}${m.status === "live" ? " · thưởng hiển thị là nếu tháng kết thúc lúc này" : ""}</div>
+    ${board(m.totals, m.rank, m.prizes, "", m.status !== "done")}</div>`;
+}).join(""));
+el("upcoming", DATA.months.filter(m => m.status === "upcoming").map(m => `<span>${m.name} · GW${m.start}–${m.stop}</span>`).join(""));
+
+// Races
+const leadPrizes = (totals, prizes) => { const s = Object.keys(totals).sort((a, b) => totals[b] - totals[a]); const o = {}; s.forEach((id, i) => o[id] = prizes[i] || 0); return o; };
+const rc = DATA.races;
+const valueTotals = Object.fromEntries(DATA.players.map(p => [String(p.id), p.value]));
+const valueRank = Object.fromEntries(Object.entries(valueTotals).map(([id, v]) => [id, 1 + Object.values(valueTotals).filter(x => x > v).length]));
+const ovr = [...DATA.players].sort((a, b) => a.overall_rank - b.overall_rank);
+const hw = DATA.high_week;
+el("races", [
+  `<div class="card"><div class="card-head"><h3>Lượt đi</h3><span class="tag live">GW1–19</span></div>${board(rc.first_half.totals, rc.first_half.rank, rc.first_half.prizes, "", true)}</div>`,
+  `<div class="card"><div class="card-head"><h3>Cả mùa</h3><span class="tag live">GW1–38</span></div>${board(rc.season.totals, rc.season.rank, rc.season.prizes, "", true)}</div>`,
+  `<div class="card"><div class="card-head"><h3>Bounty</h3><span class="tag live">Hạng &lt; 500K</span></div>
+    <ol class="board">${ovr.map((p, i) => { const q = DATA.bounty.qualified.includes(p.id); return `<li><span class="rk">${i + 1}</span><span>${who(p.id)}</span><span class="num muted">${(p.overall_rank || 0).toLocaleString("vi-VN")}</span><span class="money ${q ? "pend" : "zero"}">${q ? fmt(DATA.bounty.pool / DATA.bounty.qualified.length) : "–"}</span></li>`; }).join("")}</ol></div>`,
+  `<div class="card"><div class="card-head"><h3>Giá trị đội cao nhất</h3><span class="tag live">${fmt(R.team_value)}</span></div>
+    <ol class="board">${Object.keys(valueTotals).sort((a, b) => valueTotals[b] - valueTotals[a]).map(id => { const v = DATA.value_prizes[id]; return `<li><span class="rk">${valueRank[id]}</span><span>${who(id)}</span><span class="num muted">£${valueTotals[id].toFixed(1)}m</span><span class="money ${v ? "pend" : "zero"}">${v ? fmt(v) : "–"}</span></li>`; }).join("")}</ol></div>`,
+  `<div class="card"><div class="card-head"><h3>Điểm tuần cao nhất</h3><span class="tag live">${fmt(R.high_week)}</span></div>
+    ${hw ? `<div style="display:grid;gap:4px"><b style="font:800 44px/1 var(--display)" class="num">${hw.points}</b><span>${who(hw.id)} · GW${hw.gw}</span></div>` : ""}
+    <p class="note">Điểm cao nhất trong một GW của cả mùa, tính trên các GW đã đá.</p></div>`,
+  `<div class="card"><div class="card-head"><h3>Cúp &amp; Cúp II</h3><span class="tag up">Chưa có</span></div>
+    <p class="note">Mỗi cúp: nhất ${fmt(R.cup[0])}, nhì ${fmt(R.cup[1])}. API của league chưa có dữ liệu cúp, khi có kết quả sẽ cập nhật tay.</p></div>`,
+].join(""));
+
+// Rules
+el("rules", `
+  <div><h3>Giải thưởng (tổng ${fmt(prizeTotal)})</h3><ul>
+    <li>Tuần × 38: ${R.week.map(fmt).join(" / ")}</li>
+    <li>Tháng × 10: ${R.month.map(fmt).join(" / ")}</li>
+    <li>Lượt đi (GW1–19): ${R.half.map(fmt).join(" / ")}</li>
+    <li>Lượt về (GW20–38): ${R.half.map(fmt).join(" / ")}</li>
+    <li>Cả mùa: ${R.season.map(fmt).join(" / ")}</li>
+    <li>Cúp, Cúp II: ${R.cup.map(fmt).join(" / ")} mỗi cúp</li>
+    <li>Giá trị đội cao nhất: ${fmt(R.team_value)}</li>
+    <li>Điểm tuần cao nhất: ${fmt(R.high_week)}</li>
+  </ul></div>
+  <div><h3>Đóng tiền</h3><ul>
+    <li>Đầu mùa: ${fmt(R.buy_in_first)} (gồm ${fmt(R.bounty)} bounty)</li>
+    <li>Lượt về: ${fmt(R.buy_in_second)} trừ số tiền đã thắng ở lượt đi</li>
+    <li>Bounty: quỹ ${fmt(R.bounty)} × ${DATA.players.length} người, chia đều cho ai kết thúc mùa với hạng overall dưới 500.000</li>
+    <li>Đồng hạng: chia đều tổng giải của các vị trí bị chiếm</li>
+  </ul></div>`);
+
+el("footer", `Dữ liệu lấy từ API công khai của Fantasy Premier League, league <a href="https://fantasy.premierleague.com/leagues/${DATA.league.id}/standings/c" target="_blank" rel="noopener">${DATA.league.id}</a>. Luật lấy theo file “Hội thôi đuổi đam mê - FPL”.`);
+
+// Sắp xếp: bấm tiêu đề cột; số mặc định giảm dần, chữ tăng dần
+document.querySelectorAll("table").forEach(table => {
+  const heads = [...table.tHead.rows[0].cells];
+  heads.forEach((th, col) => {
+    th.innerHTML = `<button type="button">${th.innerHTML}</button>`;
+    th.querySelector("button").addEventListener("click", () => {
+      const body = table.tBodies[0];
+      const rows = [...body.rows];
+      const val = r => { const c = r.cells[col]; const v = c.dataset.v ?? c.textContent.trim(); return v !== "" && !isNaN(v) ? +v : v; };
+      const numeric = rows.every(r => typeof val(r) === "number");
+      const cur = th.getAttribute("aria-sort");
+      const dir = cur ? (cur === "descending" ? "ascending" : "descending") : (numeric ? "descending" : "ascending");
+      heads.forEach(h => h.removeAttribute("aria-sort"));
+      th.setAttribute("aria-sort", dir);
+      const k = dir === "ascending" ? 1 : -1;
+      rows.sort((a, b) => { const x = val(a), y = val(b); return (numeric ? x - y : String(x).localeCompare(String(y), "vi")) * k; });
+      rows.forEach(r => body.appendChild(r));
+    });
+  });
+});
+</script>
