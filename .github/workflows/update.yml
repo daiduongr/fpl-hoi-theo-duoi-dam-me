@@ -1,0 +1,48 @@
+name: Cập nhật sau mỗi GW
+
+# Chạy mỗi giờ; script tự thoát nếu chưa có GW nào vừa đá xong hoặc vừa chốt bonus,
+# nên trang chỉ được commit lại khi kết thúc GW (và một lần nữa khi FPL chốt bonus).
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Build lại kể cả khi không có GW mới"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-page
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build trang
+        run: |
+          if [ "${{ inputs.force }}" = "true" ]; then
+            python fpl_prize_page.py
+          else
+            python fpl_prize_page.py --if-changed
+          fi
+      - name: Commit nếu có thay đổi
+        run: |
+          if git diff --quiet; then
+            echo "Không có thay đổi"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898741+github-actions[bot]@users.noreply.github.com"
+          GW=$(python -c "import json; print(json.load(open('state.json'))['finished_gw'])")
+          git commit -am "Cập nhật sau GW${GW}"
+          git push
