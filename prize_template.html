@@ -58,7 +58,10 @@ th, td { padding: 10px 12px; text-align: right; white-space: nowrap; border-bott
 th { font: 600 12px/1.2 var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
 tbody tr:last-child td { border-bottom: 0; }
 th:first-child, td:first-child { text-align: left; }
-td.who { display: flex; flex-direction: column; gap: 0; }
+/* Cột tên cố định khi kéo ngang bảng (nhất là trên điện thoại) */
+th:first-child, td:first-child { position: sticky; left: 0; z-index: 1; background: var(--surface); box-shadow: 1px 0 0 var(--line); }
+td.who b, td.who small { display: block; }
+@media (max-width: 600px) { td.who small { max-width: 110px; overflow: hidden; text-overflow: ellipsis; } th, td { padding: 9px 10px; } }
 td.who b { font-weight: 600; }
 td.who small { color: var(--muted); font-size: 12px; }
 .pos { color: var(--pos); font-weight: 600; } .neg { color: var(--neg); font-weight: 600; }
@@ -216,11 +219,10 @@ const CAT = { week: "tuần", month: "tháng", half1: "lượt đi", half2: "lư
 const parts = obj => Object.entries(obj).map(([k, v]) => `${CAT[k] || k} ${fmt(v)}`).join(" · ");
 const tone = v => v > 0 ? "pos" : v < 0 ? "neg" : "";
 const ledger = [...DATA.money].sort((a, b) => b.realized_total - a.realized_total || b.unrealized_total - a.unrealized_total);
-el("ledger", `<thead><tr><th>#</th><th style="text-align:left">Người chơi</th><th>Realized</th><th>Unrealized</th><th>Tổng thưởng</th></tr></thead><tbody>` +
+el("ledger", `<thead><tr><th>Người chơi</th><th>Realized</th><th>Unrealized</th><th>Tổng thưởng</th></tr></thead><tbody>` +
   ledger.map((r, i) => {
     const p = P[String(r.id)];
-    return `<tr><td data-v="${i + 1}"><span class="rk">${i + 1}</span></td>
-      <td class="who" data-v="${p.nick}"><b>${who(p.id)}</b><small>${p.team}</small></td>
+    return `<tr><td class="who" data-v="${p.nick}"><b>${who(p.id)}</b><small>${p.team}</small></td>
       <td data-v="${r.realized_total}"><b>${fmt(r.realized_total)}</b>${r.realized_total ? `<span class="sub">${parts(r.realized)}</span>` : ""}</td>
       <td data-v="${r.unrealized_total}" class="pendcol">${fmt(r.unrealized_total)}${r.unrealized_total ? `<span class="sub">${parts(r.unrealized)}</span>` : ""}</td>
       <td data-v="${r.realized_total + r.unrealized_total}">${fmt(r.realized_total + r.unrealized_total)}</td></tr>`;
