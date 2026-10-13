@@ -189,7 +189,7 @@ const profile = id => `https://fantasy.premierleague.com/entry/${id}/history`;
 const who = id => `<a class="player" href="${profile(id)}" target="_blank" rel="noopener" title="Xem profile FPL của ${nick(id)}">${nick(id)}</a>${badge(id)}`;
 const prizeTotal = R.week[0]*38 + R.week[1]*38 + R.week[2]*38 + (R.month[0]+R.month[1]+R.month[2])*10
   + (R.half[0]+R.half[1]+R.half[2])*2 + R.season.reduce((a,b)=>a+b,0) + R.cup.reduce((a,b)=>a+b,0)*2
-  + R.team_value + R.high_week;
+  + R.team_value + R.high_week + DATA.bounty.pool;  // gồm quỹ bounty
 
 // Header
 const cur = DATA.current_gw;
@@ -207,7 +207,7 @@ const doneWeeks = DATA.weeks.filter(w => w.finished).length;
 const doneMonths = DATA.months.filter(m => m.status === "done").length;
 const paidOut = DATA.money.reduce((a, r) => a + r.realized_total, 0);
 el("strip", [
-  [fmt(prizeTotal), "Quỹ thưởng cả mùa"],
+  [fmt(prizeTotal), "Tổng giải thưởng cả mùa"],
   [fmt(paidOut), `Đã chốt (${doneWeeks} tuần, ${doneMonths} tháng)`],
   [fmt(DATA.bounty.pool), `Quỹ bounty, ${DATA.bounty.qualified.length} người đang đạt`],
   [String(DATA.players.length), "Người chơi"],
@@ -294,6 +294,7 @@ el("rules", `
     <li>Cúp, Cúp II: ${R.cup.map(fmt).join(" / ")} mỗi cúp</li>
     <li>Giá trị đội cao nhất: ${fmt(R.team_value)}</li>
     <li>Điểm tuần cao nhất: ${fmt(R.high_week)}</li>
+    <li>Bounty: quỹ ${fmt(DATA.bounty.pool)}</li>
   </ul></div>
   <div><h3>Đóng tiền</h3><ul>
     <li>Đầu mùa: ${fmt(R.buy_in_first)} (gồm ${fmt(R.bounty)} bounty)</li>
