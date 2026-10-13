@@ -4,8 +4,9 @@ Tính tiền thưởng league "Hội theo đuổi đam mê" theo luật trong fi
 rồi xuất ra trang index.html (GitHub Pages).
 
 Cách chạy:
-    python fpl_prize_page.py            # league mặc định 141084
+    python fpl_prize_page.py                 # league mặc định 141084
     python fpl_prize_page.py <league_id>
+    python fpl_prize_page.py --if-changed    # chỉ build khi có GW vừa xong hoặc vừa chốt bonus
 """
 
 import json
@@ -18,6 +19,8 @@ BASE_URL = "https://fantasy.premierleague.com/api"
 HERE = Path(__file__).parent
 TEMPLATE = HERE / "prize_template.html"
 OUTPUT = HERE / "index.html"
+STATE = HERE / "state.json"   # GW đã build gần nhất, dùng cho --if-changed
+MATCH_LENGTH = timedelta(hours=2)
 HEAD = ('<!doctype html>\n<html lang="vi">\n<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n')
 
@@ -73,9 +76,8 @@ def ranks(scores):
     return {pid: 1 + sum(1 for s in scores.values() if s > v) for pid, v in scores.items()}
 
 
-def main(league_id):
+def main(league_id, if_changed=False):
     boot = get_json("/bootstrap-static/")
-    league = get_json(f"/leagues-classic/{league_id}/standings/")
     events = {e["id"]: e for e in boot["events"]}
     played = [e["id"] for e in boot["events"] if e["finished"] or e["is_current"]]
     # FPL bật cờ finished muộn (sau khi chốt bonus); coi GW đã xong khi mọi trận đã đá xong
@@ -83,6 +85,24 @@ def main(league_id):
     finished = {e["id"] for e in boot["events"] if e["finished"]} | {
         g for g in played
         if all(f["finished"] or f["finished_provisional"] for f in fixtures if f["event"] == g)}
+
+    # Chỉ build lại khi có GW mới đá xong, hoặc FPL vừa chốt bonus (data_checked) cho GW đó
+    last_done = max(finished, default=0)
+    state = {"league": league_id, "finished_gw": last_done,
+             "data_checked": bool(last_done and events[last_done]["data_checked"])}
+    if if_changed and STATE.exists() and json.loads(STATE.read_text()) == state:
+        print(f"Không có gì mới (đã build GW{last_done}, data_checked={state['data_checked']})")
+        return
+
+    # Dự kiến thời điểm GW tiếp theo kết thúc = giờ đá trận cuối + 2 tiếng
+    kickoffs = {}
+    for f in fixtures:
+        if f["event"] and f["kickoff_time"]:
+            kickoffs.setdefault(f["event"], []).append(datetime.fromisoformat(f["kickoff_time"].replace("Z", "+00:00")))
+    next_gw = next((g for g in sorted(kickoffs) if g not in finished), None)
+    next_update = {"gw": next_gw, "eta": (max(kickoffs[next_gw]) + MATCH_LENGTH).isoformat()} if next_gw else None
+
+    league = get_json(f"/leagues-classic/{league_id}/standings/")
 
     players = []
     for row in league["standings"]["results"]:
@@ -194,6 +214,8 @@ def main(league_id):
         "updated": now.strftime("%H:%M, %d/%m/%Y"),
         "current_gw": current,
         "current_finished": current in finished,
+        "next_update": next_update,
+        "bonus_confirmed": state["data_checked"],
         "next_deadline": next((e["deadline_time"] for e in boot["events"] if e["is_next"]), None),
         "players": [{k: v for k, v in p.items() if k != "gw"} | {"gw": {str(k): v for k, v in p["gw"].items()}}
                     for p in players],
@@ -214,8 +236,10 @@ def main(league_id):
     html = TEMPLATE.read_text(encoding="utf-8").replace(
         "/*__DATA__*/null", json.dumps(data, ensure_ascii=False, default=str))
     OUTPUT.write_text(HEAD + html, encoding="utf-8")
+    STATE.write_text(json.dumps(state) + "\n")
     print(f"Đã ghi {OUTPUT} (GW hiện tại: {current})")
 
 
 if __name__ == "__main__":
-    main(int(sys.argv[1]) if len(sys.argv) > 1 else 141084)
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    main(int(args[0]) if args else 141084, if_changed="--if-changed" in sys.argv)

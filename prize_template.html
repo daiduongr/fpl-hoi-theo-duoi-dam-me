@@ -131,14 +131,6 @@ a.player:hover, a.player:focus-visible { color: var(--pitch); }
 
   <section>
     <div class="sec-head">
-      <h2>Đóng lượt về</h2>
-      <p>Đóng sau GW19. Mỗi người đóng 500k trừ đi số tiền đã thắng ở lượt đi (tuần, tháng và giải lượt đi; không tính bounty). Tính theo phía người chơi: <span class="neg">−</span> là phải đóng thêm, <span class="pos">+</span> là được nhận lại.</p>
-    </div>
-    <div class="scroll"><table id="payment"></table></div>
-  </section>
-
-  <section>
-    <div class="sec-head">
       <h2>Giải tuần</h2>
       <p>Mỗi GW: nhất 100k, nhì 30k, ba 15k. Điểm đã trừ phí chuyển nhượng. Đồng hạng thì chia đều tổng giải của các vị trí bị chiếm.</p>
     </div>
@@ -167,6 +159,14 @@ a.player:hover, a.player:focus-visible { color: var(--pitch); }
     <div class="rules" id="rules"></div>
   </section>
 
+  <section>
+    <div class="sec-head">
+      <h2>Đóng lượt về</h2>
+      <p>Đóng sau GW19. Mỗi người đóng 500k trừ đi số tiền đã thắng ở lượt đi (tuần, tháng và giải lượt đi; không tính bounty). Tính theo phía người chơi: <span class="neg">−</span> là phải đóng thêm, <span class="pos">+</span> là được nhận lại.</p>
+    </div>
+    <div class="scroll"><table id="payment"></table></div>
+  </section>
+
   <footer id="footer"></footer>
 </div>
 
@@ -192,8 +192,12 @@ const prizeTotal = R.week[0]*38 + R.week[1]*38 + R.week[2]*38 + (R.month[0]+R.mo
 const cur = DATA.current_gw;
 document.getElementById("eyebrow").textContent = `Fantasy Premier League 2026/27 · League ${DATA.league.id}`;
 document.getElementById("title").textContent = DATA.league.name.replace(/\s*\d+$/, "");
+const vnTime = iso => new Date(iso).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh", hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" });
+const nu = DATA.next_update;
 el("meta", `<span>Cập nhật ${DATA.updated} (giờ VN)</span>` +
-  (cur && !DATA.current_finished ? `<span class="live">GW${cur} chưa chốt điểm, tiền tuần này là tạm tính</span>` : `<span>Đã chốt đến GW${cur}</span>`));
+  (cur && !DATA.current_finished ? `<span class="live">GW${cur} đang diễn ra</span>` :
+    `<span>Đã chốt đến GW${cur}${DATA.bonus_confirmed ? "" : " (bonus chưa chốt chính thức)"}</span>`) +
+  (nu ? `<span>Tự cập nhật sau khi GW${nu.gw} kết thúc, dự kiến ${vnTime(nu.eta)}</span>` : ""));
 
 const doneWeeks = DATA.weeks.filter(w => w.finished).length;
 const doneMonths = DATA.months.filter(m => m.status === "done").length;
