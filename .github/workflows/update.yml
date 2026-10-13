@@ -1,10 +1,76 @@
 name: Cập nhật sau mỗi GW
 
-# Chạy mỗi giờ; script tự thoát nếu chưa có GW nào vừa đá xong hoặc vừa chốt bonus,
-# nên trang chỉ được commit lại khi kết thúc GW (và một lần nữa khi FPL chốt bonus).
+# Chỉ chạy vào lúc kết thúc mỗi GW (và vài giờ sau để lấy bonus đã chốt).
+# Lịch bên dưới do update_schedule.py sinh từ lịch thi đấu FPL; mỗi lần chạy, nó tự
+# tính lại và push nếu giờ đá thay đổi (cần secret WORKFLOW_TOKEN có quyền Workflows).
 on:
   schedule:
-    - cron: "17 * * * *"
+    # BEGIN GW SCHEDULE (tự sinh bởi update_schedule.py, đừng sửa tay)
+    - cron: "0 22 19 10 *"  # GW7 xong, 19/10 22:00 UTC
+    - cron: "0 3 20 10 *"  # GW7 chốt bonus, 20/10 03:00 UTC
+    - cron: "30 19 25 10 *"  # GW8 xong, 25/10 19:30 UTC
+    - cron: "30 0 26 10 *"  # GW8 chốt bonus, 26/10 00:30 UTC
+    - cron: "0 23 2 11 *"  # GW9 xong, 02/11 23:00 UTC
+    - cron: "0 4 3 11 *"  # GW9 chốt bonus, 03/11 04:00 UTC
+    - cron: "30 19 8 11 *"  # GW10 xong, 08/11 19:30 UTC
+    - cron: "30 0 9 11 *"  # GW10 chốt bonus, 09/11 00:30 UTC
+    - cron: "0 23 23 11 *"  # GW11 xong, 23/11 23:00 UTC
+    - cron: "0 4 24 11 *"  # GW11 chốt bonus, 24/11 04:00 UTC
+    - cron: "30 19 29 11 *"  # GW12 xong, 29/11 19:30 UTC
+    - cron: "30 0 30 11 *"  # GW12 chốt bonus, 30/11 00:30 UTC
+    - cron: "0 23 2 12 *"  # GW13 xong, 02/12 23:00 UTC
+    - cron: "0 4 3 12 *"  # GW13 chốt bonus, 03/12 04:00 UTC
+    - cron: "0 18 5 12 *"  # GW14 xong, 05/12 18:00 UTC
+    - cron: "0 23 5 12 *"  # GW14 chốt bonus, 05/12 23:00 UTC
+    - cron: "0 18 12 12 *"  # GW15 xong, 12/12 18:00 UTC
+    - cron: "0 23 12 12 *"  # GW15 chốt bonus, 12/12 23:00 UTC
+    - cron: "0 18 19 12 *"  # GW16 xong, 19/12 18:00 UTC
+    - cron: "0 23 19 12 *"  # GW16 chốt bonus, 19/12 23:00 UTC
+    - cron: "0 22 27 12 *"  # GW17 xong, 27/12 22:00 UTC
+    - cron: "0 3 28 12 *"  # GW17 chốt bonus, 28/12 03:00 UTC
+    - cron: "15 23 30 12 *"  # GW18 xong, 30/12 23:15 UTC
+    - cron: "15 4 31 12 *"  # GW18 chốt bonus, 31/12 04:15 UTC
+    - cron: "30 19 3 1 *"  # GW19 xong, 03/01 19:30 UTC
+    - cron: "30 0 4 1 *"  # GW19 chốt bonus, 04/01 00:30 UTC
+    - cron: "0 23 7 1 *"  # GW20 xong, 07/01 23:00 UTC
+    - cron: "0 4 8 1 *"  # GW20 chốt bonus, 08/01 04:00 UTC
+    - cron: "0 18 16 1 *"  # GW21 xong, 16/01 18:00 UTC
+    - cron: "0 23 16 1 *"  # GW21 chốt bonus, 16/01 23:00 UTC
+    - cron: "0 18 23 1 *"  # GW22 xong, 23/01 18:00 UTC
+    - cron: "0 23 23 1 *"  # GW22 chốt bonus, 23/01 23:00 UTC
+    - cron: "0 18 30 1 *"  # GW23 xong, 30/01 18:00 UTC
+    - cron: "0 23 30 1 *"  # GW23 chốt bonus, 30/01 23:00 UTC
+    - cron: "0 18 6 2 *"  # GW24 xong, 06/02 18:00 UTC
+    - cron: "0 23 6 2 *"  # GW24 chốt bonus, 06/02 23:00 UTC
+    - cron: "0 23 10 2 *"  # GW25 xong, 10/02 23:00 UTC
+    - cron: "0 4 11 2 *"  # GW25 chốt bonus, 11/02 04:00 UTC
+    - cron: "0 18 20 2 *"  # GW26 xong, 20/02 18:00 UTC
+    - cron: "0 23 20 2 *"  # GW26 chốt bonus, 20/02 23:00 UTC
+    - cron: "0 18 27 2 *"  # GW27 xong, 27/02 18:00 UTC
+    - cron: "0 23 27 2 *"  # GW27 chốt bonus, 27/02 23:00 UTC
+    - cron: "0 23 3 3 *"  # GW28 xong, 03/03 23:00 UTC
+    - cron: "0 4 4 3 *"  # GW28 chốt bonus, 04/03 04:00 UTC
+    - cron: "0 18 13 3 *"  # GW29 xong, 13/03 18:00 UTC
+    - cron: "0 23 13 3 *"  # GW29 chốt bonus, 13/03 23:00 UTC
+    - cron: "0 18 20 3 *"  # GW30 xong, 20/03 18:00 UTC
+    - cron: "0 23 20 3 *"  # GW30 chốt bonus, 20/03 23:00 UTC
+    - cron: "0 17 10 4 *"  # GW31 xong, 10/04 17:00 UTC
+    - cron: "0 22 10 4 *"  # GW31 chốt bonus, 10/04 22:00 UTC
+    - cron: "0 17 17 4 *"  # GW32 xong, 17/04 17:00 UTC
+    - cron: "0 22 17 4 *"  # GW32 chốt bonus, 17/04 22:00 UTC
+    - cron: "0 17 24 4 *"  # GW33 xong, 24/04 17:00 UTC
+    - cron: "0 22 24 4 *"  # GW33 chốt bonus, 24/04 22:00 UTC
+    - cron: "0 17 1 5 *"  # GW34 xong, 01/05 17:00 UTC
+    - cron: "0 22 1 5 *"  # GW34 chốt bonus, 01/05 22:00 UTC
+    - cron: "0 17 8 5 *"  # GW35 xong, 08/05 17:00 UTC
+    - cron: "0 22 8 5 *"  # GW35 chốt bonus, 08/05 22:00 UTC
+    - cron: "0 17 15 5 *"  # GW36 xong, 15/05 17:00 UTC
+    - cron: "0 22 15 5 *"  # GW36 chốt bonus, 15/05 22:00 UTC
+    - cron: "0 17 23 5 *"  # GW37 xong, 23/05 17:00 UTC
+    - cron: "0 22 23 5 *"  # GW37 chốt bonus, 23/05 22:00 UTC
+    - cron: "0 18 30 5 *"  # GW38 xong, 30/05 18:00 UTC
+    - cron: "0 23 30 5 *"  # GW38 chốt bonus, 30/05 23:00 UTC
+    # END GW SCHEDULE
   workflow_dispatch:
     inputs:
       force:
@@ -23,8 +89,12 @@ jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      HAS_TOKEN: ${{ secrets.WORKFLOW_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN || github.token }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -35,14 +105,25 @@ jobs:
           else
             python fpl_prize_page.py --if-changed
           fi
+      - name: Cập nhật lịch chạy theo lịch thi đấu
+        run: python update_schedule.py
       - name: Commit nếu có thay đổi
         run: |
+          if [ "$HAS_TOKEN" != "true" ] && ! git diff --quiet -- .github; then
+            echo "::warning::Lịch thi đấu đã đổi nhưng thiếu secret WORKFLOW_TOKEN nên không cập nhật được lịch chạy"
+            git checkout -- .github
+          fi
           if git diff --quiet; then
             echo "Không có thay đổi"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898741+github-actions[bot]@users.noreply.github.com"
-          GW=$(python -c "import json; print(json.load(open('state.json'))['finished_gw'])")
-          git commit -am "Cập nhật sau GW${GW}"
+          if git diff --quiet -- index.html; then
+            MSG="Cập nhật lịch chạy theo lịch thi đấu mới"
+          else
+            GW=$(python -c "import json; print(json.load(open('state.json'))['finished_gw'])")
+            MSG="Cập nhật sau GW${GW}"
+          fi
+          git commit -am "$MSG"
           git push

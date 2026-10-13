@@ -94,13 +94,13 @@ def main(league_id, if_changed=False):
         print(f"Không có gì mới (đã build GW{last_done}, data_checked={state['data_checked']})")
         return
 
-    # Dự kiến thời điểm GW tiếp theo kết thúc = giờ đá trận cuối + 2 tiếng
+    # Lần cập nhật tới = giờ đá trận cuối của GW tiếp theo + 2 tiếng + 1 tiếng (khớp update_schedule.py)
     kickoffs = {}
     for f in fixtures:
         if f["event"] and f["kickoff_time"]:
             kickoffs.setdefault(f["event"], []).append(datetime.fromisoformat(f["kickoff_time"].replace("Z", "+00:00")))
     next_gw = next((g for g in sorted(kickoffs) if g not in finished), None)
-    next_update = {"gw": next_gw, "eta": (max(kickoffs[next_gw]) + MATCH_LENGTH).isoformat()} if next_gw else None
+    next_update = {"gw": next_gw, "eta": (max(kickoffs[next_gw]) + MATCH_LENGTH + timedelta(hours=1)).isoformat()} if next_gw else None
 
     league = get_json(f"/leagues-classic/{league_id}/standings/")
 

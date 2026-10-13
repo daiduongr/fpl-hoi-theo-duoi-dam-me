@@ -197,7 +197,7 @@ const nu = DATA.next_update;
 el("meta", `<span>Cập nhật ${DATA.updated} (giờ VN)</span>` +
   (cur && !DATA.current_finished ? `<span class="live">GW${cur} đang diễn ra</span>` :
     `<span>Đã chốt đến GW${cur}${DATA.bonus_confirmed ? "" : " (bonus chưa chốt chính thức)"}</span>`) +
-  (nu ? `<span>Tự cập nhật sau khi GW${nu.gw} kết thúc, dự kiến ${vnTime(nu.eta)}</span>` : ""));
+  (nu ? `<span>Lần cập nhật tới: ${vnTime(nu.eta)}, sau khi GW${nu.gw} kết thúc</span>` : ""));
 
 const doneWeeks = DATA.weeks.filter(w => w.finished).length;
 const doneMonths = DATA.months.filter(m => m.status === "done").length;
