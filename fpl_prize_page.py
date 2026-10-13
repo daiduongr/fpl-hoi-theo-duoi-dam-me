@@ -21,6 +21,9 @@ TEMPLATE = HERE / "prize_template.html"
 OUTPUT = HERE / "index.html"
 STATE = HERE / "state.json"   # GW đã build gần nhất, dùng cho --if-changed
 MATCH_LENGTH = timedelta(hours=2)
+RUN_AFTER_END = timedelta(hours=1)          # chạy 1 giờ sau trận cuối của GW
+RUN_BEFORE_DEADLINE = timedelta(hours=24)   # và 1 ngày trước deadline GW tiếp theo
+PRE_DEADLINE_WINDOW = timedelta(hours=25)   # GitHub có thể chạy trễ, nới thêm 1 giờ
 HEAD = ('<!doctype html>\n<html lang="vi">\n<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n')
 
@@ -88,8 +91,14 @@ def main(league_id, if_changed=False):
 
     # Chỉ build lại khi có GW mới đá xong, hoặc FPL vừa chốt bonus (data_checked) cho GW đó
     last_done = max(finished, default=0)
+    # pre_deadline_gw: GW gần nhất đã bước vào khoảng 1 ngày trước deadline -> build lại 1 lần
+    # để có giá trị đội, hạng overall (bounty) mới nhất trước khi mọi người chốt đội
+    now_utc = datetime.now(timezone.utc)
+    deadlines = {e["id"]: datetime.fromisoformat(e["deadline_time"].replace("Z", "+00:00")) for e in boot["events"]}
+    pre_deadline_gw = max((g for g, d in deadlines.items() if now_utc >= d - PRE_DEADLINE_WINDOW), default=0)
     state = {"league": league_id, "finished_gw": last_done,
-             "data_checked": bool(last_done and events[last_done]["data_checked"])}
+             "data_checked": bool(last_done and events[last_done]["data_checked"]),
+             "pre_deadline_gw": pre_deadline_gw}
     if if_changed and STATE.exists() and json.loads(STATE.read_text()) == state:
         print(f"Không có gì mới (đã build GW{last_done}, data_checked={state['data_checked']})")
         return
@@ -99,8 +108,12 @@ def main(league_id, if_changed=False):
     for f in fixtures:
         if f["event"] and f["kickoff_time"]:
             kickoffs.setdefault(f["event"], []).append(datetime.fromisoformat(f["kickoff_time"].replace("Z", "+00:00")))
-    next_gw = next((g for g in sorted(kickoffs) if g not in finished), None)
-    next_update = {"gw": next_gw, "eta": (max(kickoffs[next_gw]) + MATCH_LENGTH + timedelta(hours=1)).isoformat()} if next_gw else None
+    # Lần cập nhật tới: sớm nhất trong (GW tiếp theo kết thúc + 1 giờ) và (deadline tiếp theo - 1 ngày)
+    upcoming = [(max(ks) + MATCH_LENGTH + RUN_AFTER_END, "end", g) for g, ks in kickoffs.items() if g not in finished]
+    upcoming += [(d - RUN_BEFORE_DEADLINE, "deadline", g) for g, d in deadlines.items() if d - RUN_BEFORE_DEADLINE > now_utc]
+    upcoming = [u for u in upcoming if u[0] > now_utc]
+    eta, kind, gw_ = min(upcoming) if upcoming else (None, None, None)
+    next_update = {"gw": gw_, "kind": kind, "eta": eta.isoformat()} if eta else None
 
     league = get_json(f"/leagues-classic/{league_id}/standings/")
 
