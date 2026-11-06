@@ -184,7 +184,12 @@ const nick = id => P[String(id)].nick;
 // Biểu tượng cho top 3 tổng điểm cả mùa (đồng điểm thì cùng biểu tượng)
 const MEDALS = { 1: ["🏆", "Dẫn đầu tổng điểm"], 2: ["🥈", "Hạng 2 tổng điểm"], 3: ["🥉", "Hạng 3 tổng điểm"] };
 const seasonRank = id => 1 + DATA.players.filter(p => p.total > P[String(id)].total).length;
-const badge = id => { const m = MEDALS[seasonRank(id)]; return m ? ` <span class="medal" title="${m[1]}" aria-label="${m[1]}">${m[0]}</span>` : ""; };
+// Tiền bay cho người có tổng thưởng (realized + unrealized) thấp nhất (bằng nhau thì cùng biểu tượng)
+const prizeSum = r => r.realized_total + r.unrealized_total;
+const lowestPrize = Math.min(...DATA.money.map(prizeSum));
+const isLowestPrize = id => prizeSum(DATA.money.find(r => r.id === id)) === lowestPrize;
+const icon = ([emoji, label]) => ` <span class="medal" title="${label}" aria-label="${label}">${emoji}</span>`;
+const badge = id => { const m = MEDALS[seasonRank(id)]; return (m ? icon([m[0], m[1]]) : "") + (isLowestPrize(id) ? icon(["💸", "Tổng thưởng thấp nhất"]) : ""); };
 const profile = id => `https://fantasy.premierleague.com/entry/${id}/history`;
 const who = id => `<a class="player" href="${profile(id)}" target="_blank" rel="noopener" title="Xem profile FPL của ${nick(id)}">${nick(id)}</a>${badge(id)}`;
 const prizeTotal = R.week[0]*38 + R.week[1]*38 + R.week[2]*38 + (R.month[0]+R.month[1]+R.month[2])*10
