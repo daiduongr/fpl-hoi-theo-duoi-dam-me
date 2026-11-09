@@ -6,8 +6,9 @@ Xem trang: https://daiduongr.github.io/fpl-hoi-theo-duoi-dam-me/
 
 ## Tự cập nhật
 
-Workflow [`update.yml`](.github/workflows/update.yml) chạy 3 lần mỗi GW: 1 ngày trước deadline (cập nhật giá trị
-đội, hạng overall trước khi chốt đội), 1 giờ sau trận cuối của GW, và 6 giờ sau đó để lấy bonus đã chốt. Lịch chạy do [`update_schedule.py`](update_schedule.py) sinh từ
+Workflow [`update.yml`](.github/workflows/update.yml) chạy 4 lần mỗi GW: 1 ngày trước deadline (cập nhật giá trị
+đội, hạng overall trước khi chốt đội), 1 giờ sau trận cuối của GW, 6 giờ sau đó để lấy bonus, và 10:30 UTC sáng
+hôm sau, lúc FPL thường đã chốt điểm cả GW. Thêm 2 lần dự phòng mỗi ngày (01:17, 13:17 UTC) phòng khi GitHub bỏ lịch. Lịch chạy do [`update_schedule.py`](update_schedule.py) sinh từ
 lịch thi đấu FPL. Mỗi lần chạy, workflow tính lại lịch; nếu trận bị đổi giờ hay hoãn, nó tự sửa lịch và push.
 Bước này cần secret `WORKFLOW_TOKEN` (fine-grained token, repo này, quyền *Contents* và *Workflows*: Read and write).
 

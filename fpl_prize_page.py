@@ -116,6 +116,7 @@ def main(league_id, if_changed=False):
     next_update = {"gw": gw_, "kind": kind, "eta": eta.isoformat()} if eta else None
 
     league = get_json(f"/leagues-classic/{league_id}/standings/")
+    current_gw = next((e["id"] for e in boot["events"] if e["is_current"]), None)
 
     players = []
     for row in league["standings"]["results"]:
@@ -123,7 +124,11 @@ def main(league_id, if_changed=False):
         hist = get_json(f"/entry/{pid}/history/")
         entry = get_json(f"/entry/{pid}/")
         gw = {c["event"]: c["points"] - c["event_transfers_cost"] for c in hist["current"]}
-        last = hist["current"][-1] if hist["current"] else {"value": 1000, "bank": 0}
+        # Trước khi FPL chốt GW, /entry/{id}/history/ có thể kẹt ở điểm tạm (thiếu nhiều trận),
+        # còn bảng xếp hạng league đã có điểm live đầy đủ (event_total, đã trừ phí chuyển nhượng)
+        if current_gw in gw and not events[current_gw]["data_checked"]:
+            gw[current_gw] = row["event_total"]
+        last =hist["current"][-1] if hist["current"] else {"value": 1000, "bank": 0}
         players.append({
             "id": pid,
             "nick": NICKNAMES.get(pid, row["player_name"]),
