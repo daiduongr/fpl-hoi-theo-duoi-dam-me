@@ -1,7 +1,7 @@
 """
 Ghi lịch chạy của workflow theo lịch thi đấu FPL. Mỗi GW có 4 lần chạy (giờ UTC):
 1 ngày trước deadline, 1 giờ sau khi trận cuối kết thúc, 6 giờ sau đó (bonus tạm đã vào)
-và 10:30 UTC sáng hôm sau (FPL thường đã chốt điểm cả GW).
+và 09:30 giờ Anh sáng hôm sau (từ mùa 2026/27 FPL chốt chính thức điểm, BXH lúc 09:00 giờ Anh).
 
 Workflow gọi script này sau mỗi lần chạy, nên khi trận bị đổi giờ hay hoãn, lịch tự được sửa lại.
 
@@ -17,6 +17,7 @@ from fpl_prize_page import get_json, MATCH_LENGTH, RUN_AFTER_END, RUN_BEFORE_DEA
 
 WORKFLOW = Path(__file__).parent / ".github" / "workflows" / "update.yml"
 RUN_AFTER = [RUN_AFTER_END, timedelta(hours=6)]
+FINALIZE_DELAY = timedelta(minutes=30)  # chạy 09:30 giờ Anh, sau mốc FPL chốt điểm 09:00
 BEGIN = "# BEGIN GW SCHEDULE"
 END = "# END GW SCHEDULE"
 # Hết mùa: giữ 1 lần chạy đầu tháng 8 để workflow không bị rỗng lịch
@@ -36,6 +37,30 @@ def gw_ends():
     return {gw: max(ks) + MATCH_LENGTH for gw, ks in sorted(kickoffs.items())}
 
 
+def last_sunday(year, month):
+    d = datetime(year, month + 1, 1, tzinfo=timezone.utc) - timedelta(days=1)
+    return d - timedelta(days=(d.weekday() + 1) % 7)
+
+
+def uk_offset(t):
+    """Giờ Anh: BST (UTC+1) từ 01:00 UTC Chủ nhật cuối tháng 3 tới 01:00 UTC Chủ nhật cuối tháng 10."""
+    start = last_sunday(t.year, 3).replace(hour=1)
+    stop = last_sunday(t.year, 10).replace(hour=1)
+    return timedelta(hours=1) if start <= t < stop else timedelta(0)
+
+
+def after_uk_finalize(end):
+    """Từ mùa 2026/27, FPL chốt chính thức điểm và BXH của GW lúc 09:00 giờ Anh.
+    Trả về (giờ UTC) mốc 09:00 giờ Anh đầu tiên sau khi GW kết thúc, cộng FINALIZE_DELAY."""
+    day = (end + uk_offset(end)).date()
+    while True:
+        t = datetime(day.year, day.month, day.day, 9, tzinfo=timezone.utc)
+        t -= uk_offset(t)
+        if t > end:
+            return t + FINALIZE_DELAY
+        day += timedelta(days=1)
+
+
 def deadlines():
     boot = get_json("/bootstrap-static/")
     return {e["id"]: datetime.fromisoformat(e["deadline_time"].replace("Z", "+00:00")) for e in boot["events"]}
@@ -46,10 +71,7 @@ def cron_lines(now=None):
     runs = [(d - RUN_BEFORE_DEADLINE, gw, "trước deadline 1 ngày") for gw, d in deadlines().items()]
     for gw, end in gw_ends().items():
         runs += [(end + delay, gw, "xong" if i == 0 else "chốt bonus") for i, delay in enumerate(RUN_AFTER)]
-        # FPL thường chốt điểm cả GW (data_checked) vào sáng hôm sau giờ UK.
-        # 10:30 UTC = 10:30 GMT (mùa đông) / 11:30 BST (mùa hè), đều sau mốc đó.
-        runs.append(((end + timedelta(days=1)).replace(hour=10, minute=30, second=0, microsecond=0),
-                     gw, "FPL chốt điểm, sáng hôm sau"))
+        runs.append((after_uk_finalize(end), gw, "FPL chốt điểm 09:00 giờ Anh"))
     lines, seen = [], set()
     for t, gw, label in sorted(runs):
         if t <= now:

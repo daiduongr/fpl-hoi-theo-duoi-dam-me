@@ -6,119 +6,119 @@ name: Cập nhật sau mỗi GW
 on:
   schedule:
     # BEGIN GW SCHEDULE (tự sinh bởi update_schedule.py, đừng sửa tay)
-    - cron: "30 10 9 11 *"  # GW10 FPL chốt điểm, sáng hôm sau, 09/11 10:30 UTC
+    - cron: "30 9 9 11 *"  # GW10 FPL chốt điểm 09:00 giờ Anh, 09/11 09:30 UTC
     - cron: "0 11 20 11 *"  # GW11 trước deadline 1 ngày, 20/11 11:00 UTC
     - cron: "0 23 23 11 *"  # GW11 xong, 23/11 23:00 UTC
     - cron: "0 4 24 11 *"  # GW11 chốt bonus, 24/11 04:00 UTC
-    - cron: "30 10 24 11 *"  # GW11 FPL chốt điểm, sáng hôm sau, 24/11 10:30 UTC
+    - cron: "30 9 24 11 *"  # GW11 FPL chốt điểm 09:00 giờ Anh, 24/11 09:30 UTC
     - cron: "30 18 26 11 *"  # GW12 trước deadline 1 ngày, 26/11 18:30 UTC
     - cron: "30 19 29 11 *"  # GW12 xong, 29/11 19:30 UTC
     - cron: "30 0 30 11 *"  # GW12 chốt bonus, 30/11 00:30 UTC
-    - cron: "30 10 30 11 *"  # GW12 FPL chốt điểm, sáng hôm sau, 30/11 10:30 UTC
+    - cron: "30 9 30 11 *"  # GW12 FPL chốt điểm 09:00 giờ Anh, 30/11 09:30 UTC
     - cron: "30 18 30 11 *"  # GW13 trước deadline 1 ngày, 30/11 18:30 UTC
     - cron: "0 23 3 12 *"  # GW13 xong, 03/12 23:00 UTC
     - cron: "0 4 4 12 *"  # GW13 chốt bonus, 04/12 04:00 UTC
-    - cron: "30 10 4 12 *"  # GW13 FPL chốt điểm, sáng hôm sau, 04/12 10:30 UTC
+    - cron: "30 9 4 12 *"  # GW13 FPL chốt điểm 09:00 giờ Anh, 04/12 09:30 UTC
     - cron: "0 11 4 12 *"  # GW14 trước deadline 1 ngày, 04/12 11:00 UTC
     - cron: "30 19 6 12 *"  # GW14 xong, 06/12 19:30 UTC
     - cron: "30 0 7 12 *"  # GW14 chốt bonus, 07/12 00:30 UTC
-    - cron: "30 10 7 12 *"  # GW14 FPL chốt điểm, sáng hôm sau, 07/12 10:30 UTC
+    - cron: "30 9 7 12 *"  # GW14 FPL chốt điểm 09:00 giờ Anh, 07/12 09:30 UTC
     - cron: "30 13 11 12 *"  # GW15 trước deadline 1 ngày, 11/12 13:30 UTC
     - cron: "0 23 14 12 *"  # GW15 xong, 14/12 23:00 UTC
     - cron: "0 4 15 12 *"  # GW15 chốt bonus, 15/12 04:00 UTC
-    - cron: "30 10 15 12 *"  # GW15 FPL chốt điểm, sáng hôm sau, 15/12 10:30 UTC
+    - cron: "30 9 15 12 *"  # GW15 FPL chốt điểm 09:00 giờ Anh, 15/12 09:30 UTC
     - cron: "0 11 18 12 *"  # GW16 trước deadline 1 ngày, 18/12 11:00 UTC
     - cron: "0 23 21 12 *"  # GW16 xong, 21/12 23:00 UTC
     - cron: "0 4 22 12 *"  # GW16 chốt bonus, 22/12 04:00 UTC
-    - cron: "30 10 22 12 *"  # GW16 FPL chốt điểm, sáng hôm sau, 22/12 10:30 UTC
+    - cron: "30 9 22 12 *"  # GW16 FPL chốt điểm 09:00 giờ Anh, 22/12 09:30 UTC
     - cron: "0 11 25 12 *"  # GW17 trước deadline 1 ngày, 25/12 11:00 UTC
     - cron: "0 22 27 12 *"  # GW17 xong, 27/12 22:00 UTC
     - cron: "0 3 28 12 *"  # GW17 chốt bonus, 28/12 03:00 UTC
-    - cron: "30 10 28 12 *"  # GW17 FPL chốt điểm, sáng hôm sau, 28/12 10:30 UTC
+    - cron: "30 9 28 12 *"  # GW17 FPL chốt điểm 09:00 giờ Anh, 28/12 09:30 UTC
     - cron: "0 18 28 12 *"  # GW18 trước deadline 1 ngày, 28/12 18:00 UTC
     - cron: "15 23 30 12 *"  # GW18 xong, 30/12 23:15 UTC
     - cron: "15 4 31 12 *"  # GW18 chốt bonus, 31/12 04:15 UTC
-    - cron: "30 10 31 12 *"  # GW18 FPL chốt điểm, sáng hôm sau, 31/12 10:30 UTC
+    - cron: "30 9 31 12 *"  # GW18 FPL chốt điểm 09:00 giờ Anh, 31/12 09:30 UTC
     - cron: "30 18 31 12 *"  # GW19 trước deadline 1 ngày, 31/12 18:30 UTC
     - cron: "30 19 3 1 *"  # GW19 xong, 03/01 19:30 UTC
     - cron: "30 0 4 1 *"  # GW19 chốt bonus, 04/01 00:30 UTC
-    - cron: "30 10 4 1 *"  # GW19 FPL chốt điểm, sáng hôm sau, 04/01 10:30 UTC
+    - cron: "30 9 4 1 *"  # GW19 FPL chốt điểm 09:00 giờ Anh, 04/01 09:30 UTC
     - cron: "0 18 4 1 *"  # GW20 trước deadline 1 ngày, 04/01 18:00 UTC
     - cron: "0 23 7 1 *"  # GW20 xong, 07/01 23:00 UTC
     - cron: "0 4 8 1 *"  # GW20 chốt bonus, 08/01 04:00 UTC
-    - cron: "30 10 8 1 *"  # GW20 FPL chốt điểm, sáng hôm sau, 08/01 10:30 UTC
+    - cron: "30 9 8 1 *"  # GW20 FPL chốt điểm 09:00 giờ Anh, 08/01 09:30 UTC
     - cron: "30 13 15 1 *"  # GW21 trước deadline 1 ngày, 15/01 13:30 UTC
     - cron: "0 18 16 1 *"  # GW21 xong, 16/01 18:00 UTC
     - cron: "0 23 16 1 *"  # GW21 chốt bonus, 16/01 23:00 UTC
-    - cron: "30 10 17 1 *"  # GW21 FPL chốt điểm, sáng hôm sau, 17/01 10:30 UTC
+    - cron: "30 9 17 1 *"  # GW21 FPL chốt điểm 09:00 giờ Anh, 17/01 09:30 UTC
     - cron: "30 13 22 1 *"  # GW22 trước deadline 1 ngày, 22/01 13:30 UTC
     - cron: "0 18 23 1 *"  # GW22 xong, 23/01 18:00 UTC
     - cron: "0 23 23 1 *"  # GW22 chốt bonus, 23/01 23:00 UTC
-    - cron: "30 10 24 1 *"  # GW22 FPL chốt điểm, sáng hôm sau, 24/01 10:30 UTC
+    - cron: "30 9 24 1 *"  # GW22 FPL chốt điểm 09:00 giờ Anh, 24/01 09:30 UTC
     - cron: "30 13 29 1 *"  # GW23 trước deadline 1 ngày, 29/01 13:30 UTC
     - cron: "0 18 30 1 *"  # GW23 xong, 30/01 18:00 UTC
     - cron: "0 23 30 1 *"  # GW23 chốt bonus, 30/01 23:00 UTC
-    - cron: "30 10 31 1 *"  # GW23 FPL chốt điểm, sáng hôm sau, 31/01 10:30 UTC
+    - cron: "30 9 31 1 *"  # GW23 FPL chốt điểm 09:00 giờ Anh, 31/01 09:30 UTC
     - cron: "30 13 5 2 *"  # GW24 trước deadline 1 ngày, 05/02 13:30 UTC
     - cron: "0 18 6 2 *"  # GW24 xong, 06/02 18:00 UTC
     - cron: "0 23 6 2 *"  # GW24 chốt bonus, 06/02 23:00 UTC
-    - cron: "30 10 7 2 *"  # GW24 FPL chốt điểm, sáng hôm sau, 07/02 10:30 UTC
+    - cron: "30 9 7 2 *"  # GW24 FPL chốt điểm 09:00 giờ Anh, 07/02 09:30 UTC
     - cron: "30 18 9 2 *"  # GW25 trước deadline 1 ngày, 09/02 18:30 UTC
     - cron: "0 23 10 2 *"  # GW25 xong, 10/02 23:00 UTC
     - cron: "0 4 11 2 *"  # GW25 chốt bonus, 11/02 04:00 UTC
-    - cron: "30 10 11 2 *"  # GW25 FPL chốt điểm, sáng hôm sau, 11/02 10:30 UTC
+    - cron: "30 9 11 2 *"  # GW25 FPL chốt điểm 09:00 giờ Anh, 11/02 09:30 UTC
     - cron: "30 13 19 2 *"  # GW26 trước deadline 1 ngày, 19/02 13:30 UTC
     - cron: "0 18 20 2 *"  # GW26 xong, 20/02 18:00 UTC
     - cron: "0 23 20 2 *"  # GW26 chốt bonus, 20/02 23:00 UTC
-    - cron: "30 10 21 2 *"  # GW26 FPL chốt điểm, sáng hôm sau, 21/02 10:30 UTC
+    - cron: "30 9 21 2 *"  # GW26 FPL chốt điểm 09:00 giờ Anh, 21/02 09:30 UTC
     - cron: "30 13 26 2 *"  # GW27 trước deadline 1 ngày, 26/02 13:30 UTC
     - cron: "0 18 27 2 *"  # GW27 xong, 27/02 18:00 UTC
     - cron: "0 23 27 2 *"  # GW27 chốt bonus, 27/02 23:00 UTC
-    - cron: "30 10 28 2 *"  # GW27 FPL chốt điểm, sáng hôm sau, 28/02 10:30 UTC
+    - cron: "30 9 28 2 *"  # GW27 FPL chốt điểm 09:00 giờ Anh, 28/02 09:30 UTC
     - cron: "30 18 2 3 *"  # GW28 trước deadline 1 ngày, 02/03 18:30 UTC
     - cron: "0 23 3 3 *"  # GW28 xong, 03/03 23:00 UTC
     - cron: "0 4 4 3 *"  # GW28 chốt bonus, 04/03 04:00 UTC
-    - cron: "30 10 4 3 *"  # GW28 FPL chốt điểm, sáng hôm sau, 04/03 10:30 UTC
+    - cron: "30 9 4 3 *"  # GW28 FPL chốt điểm 09:00 giờ Anh, 04/03 09:30 UTC
     - cron: "30 13 12 3 *"  # GW29 trước deadline 1 ngày, 12/03 13:30 UTC
     - cron: "0 18 13 3 *"  # GW29 xong, 13/03 18:00 UTC
     - cron: "0 23 13 3 *"  # GW29 chốt bonus, 13/03 23:00 UTC
-    - cron: "30 10 14 3 *"  # GW29 FPL chốt điểm, sáng hôm sau, 14/03 10:30 UTC
+    - cron: "30 9 14 3 *"  # GW29 FPL chốt điểm 09:00 giờ Anh, 14/03 09:30 UTC
     - cron: "30 13 19 3 *"  # GW30 trước deadline 1 ngày, 19/03 13:30 UTC
     - cron: "0 18 20 3 *"  # GW30 xong, 20/03 18:00 UTC
     - cron: "0 23 20 3 *"  # GW30 chốt bonus, 20/03 23:00 UTC
-    - cron: "30 10 21 3 *"  # GW30 FPL chốt điểm, sáng hôm sau, 21/03 10:30 UTC
+    - cron: "30 9 21 3 *"  # GW30 FPL chốt điểm 09:00 giờ Anh, 21/03 09:30 UTC
     - cron: "30 12 9 4 *"  # GW31 trước deadline 1 ngày, 09/04 12:30 UTC
     - cron: "0 17 10 4 *"  # GW31 xong, 10/04 17:00 UTC
     - cron: "0 22 10 4 *"  # GW31 chốt bonus, 10/04 22:00 UTC
-    - cron: "30 10 11 4 *"  # GW31 FPL chốt điểm, sáng hôm sau, 11/04 10:30 UTC
+    - cron: "30 8 11 4 *"  # GW31 FPL chốt điểm 09:00 giờ Anh, 11/04 08:30 UTC
     - cron: "30 12 16 4 *"  # GW32 trước deadline 1 ngày, 16/04 12:30 UTC
     - cron: "0 17 17 4 *"  # GW32 xong, 17/04 17:00 UTC
     - cron: "0 22 17 4 *"  # GW32 chốt bonus, 17/04 22:00 UTC
-    - cron: "30 10 18 4 *"  # GW32 FPL chốt điểm, sáng hôm sau, 18/04 10:30 UTC
+    - cron: "30 8 18 4 *"  # GW32 FPL chốt điểm 09:00 giờ Anh, 18/04 08:30 UTC
     - cron: "30 12 23 4 *"  # GW33 trước deadline 1 ngày, 23/04 12:30 UTC
     - cron: "0 17 24 4 *"  # GW33 xong, 24/04 17:00 UTC
     - cron: "0 22 24 4 *"  # GW33 chốt bonus, 24/04 22:00 UTC
-    - cron: "30 10 25 4 *"  # GW33 FPL chốt điểm, sáng hôm sau, 25/04 10:30 UTC
+    - cron: "30 8 25 4 *"  # GW33 FPL chốt điểm 09:00 giờ Anh, 25/04 08:30 UTC
     - cron: "30 12 30 4 *"  # GW34 trước deadline 1 ngày, 30/04 12:30 UTC
     - cron: "0 17 1 5 *"  # GW34 xong, 01/05 17:00 UTC
     - cron: "0 22 1 5 *"  # GW34 chốt bonus, 01/05 22:00 UTC
-    - cron: "30 10 2 5 *"  # GW34 FPL chốt điểm, sáng hôm sau, 02/05 10:30 UTC
+    - cron: "30 8 2 5 *"  # GW34 FPL chốt điểm 09:00 giờ Anh, 02/05 08:30 UTC
     - cron: "30 12 7 5 *"  # GW35 trước deadline 1 ngày, 07/05 12:30 UTC
     - cron: "0 17 8 5 *"  # GW35 xong, 08/05 17:00 UTC
     - cron: "0 22 8 5 *"  # GW35 chốt bonus, 08/05 22:00 UTC
-    - cron: "30 10 9 5 *"  # GW35 FPL chốt điểm, sáng hôm sau, 09/05 10:30 UTC
+    - cron: "30 8 9 5 *"  # GW35 FPL chốt điểm 09:00 giờ Anh, 09/05 08:30 UTC
     - cron: "30 12 14 5 *"  # GW36 trước deadline 1 ngày, 14/05 12:30 UTC
     - cron: "0 17 15 5 *"  # GW36 xong, 15/05 17:00 UTC
     - cron: "0 22 15 5 *"  # GW36 chốt bonus, 15/05 22:00 UTC
-    - cron: "30 10 16 5 *"  # GW36 FPL chốt điểm, sáng hôm sau, 16/05 10:30 UTC
+    - cron: "30 8 16 5 *"  # GW36 FPL chốt điểm 09:00 giờ Anh, 16/05 08:30 UTC
     - cron: "30 12 22 5 *"  # GW37 trước deadline 1 ngày, 22/05 12:30 UTC
     - cron: "0 17 23 5 *"  # GW37 xong, 23/05 17:00 UTC
     - cron: "0 22 23 5 *"  # GW37 chốt bonus, 23/05 22:00 UTC
-    - cron: "30 10 24 5 *"  # GW37 FPL chốt điểm, sáng hôm sau, 24/05 10:30 UTC
+    - cron: "30 8 24 5 *"  # GW37 FPL chốt điểm 09:00 giờ Anh, 24/05 08:30 UTC
     - cron: "30 13 29 5 *"  # GW38 trước deadline 1 ngày, 29/05 13:30 UTC
     - cron: "0 18 30 5 *"  # GW38 xong, 30/05 18:00 UTC
     - cron: "0 23 30 5 *"  # GW38 chốt bonus, 30/05 23:00 UTC
-    - cron: "30 10 31 5 *"  # GW38 FPL chốt điểm, sáng hôm sau, 31/05 10:30 UTC
+    - cron: "30 8 31 5 *"  # GW38 FPL chốt điểm 09:00 giờ Anh, 31/05 08:30 UTC
     # END GW SCHEDULE
     # Dự phòng: GitHub hay chạy trễ/bỏ lịch, và FPL có khi chốt GW (data_checked) muộn cả ngày.
     # --if-changed nên chỉ build khi có dữ liệu mới.
