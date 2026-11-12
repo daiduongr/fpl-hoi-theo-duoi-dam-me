@@ -1,6 +1,6 @@
 """
-Ghi lịch chạy của workflow theo lịch thi đấu FPL. Mỗi GW có 4 lần chạy (giờ UTC):
-1 ngày trước deadline, 1 giờ sau khi trận cuối kết thúc, 6 giờ sau đó (bonus tạm đã vào)
+Ghi lịch chạy của workflow theo lịch thi đấu FPL. Mỗi GW có 3 lần chạy (giờ UTC):
+1 giờ sau khi trận cuối kết thúc, 6 giờ sau đó (bonus tạm đã vào)
 và 09:30 giờ Anh sáng hôm sau (từ mùa 2026/27 FPL chốt chính thức điểm, BXH lúc 09:00 giờ Anh).
 
 Workflow gọi script này sau mỗi lần chạy, nên khi trận bị đổi giờ hay hoãn, lịch tự được sửa lại.
@@ -13,7 +13,7 @@ import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-from fpl_prize_page import get_json, MATCH_LENGTH, RUN_AFTER_END, RUN_BEFORE_DEADLINE
+from fpl_prize_page import get_json, MATCH_LENGTH, RUN_AFTER_END
 
 WORKFLOW = Path(__file__).parent / ".github" / "workflows" / "update.yml"
 RUN_AFTER = [RUN_AFTER_END, timedelta(hours=6)]
@@ -61,14 +61,9 @@ def after_uk_finalize(end):
         day += timedelta(days=1)
 
 
-def deadlines():
-    boot = get_json("/bootstrap-static/")
-    return {e["id"]: datetime.fromisoformat(e["deadline_time"].replace("Z", "+00:00")) for e in boot["events"]}
-
-
 def cron_lines(now=None):
     now = now or datetime.now(timezone.utc)
-    runs = [(d - RUN_BEFORE_DEADLINE, gw, "trước deadline 1 ngày") for gw, d in deadlines().items()]
+    runs = []
     for gw, end in gw_ends().items():
         runs += [(end + delay, gw, "xong" if i == 0 else "chốt bonus") for i, delay in enumerate(RUN_AFTER)]
         runs.append((after_uk_finalize(end), gw, "FPL chốt điểm 09:00 giờ Anh"))
