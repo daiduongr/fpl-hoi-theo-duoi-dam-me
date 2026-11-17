@@ -1,2 +1,7 @@
 __pycache__/
 .DS_Store
+
+# Dữ liệu chỉ để trên máy (tên thành viên, sổ thưởng): không đưa lên repo public
+local/
+*.csv
+*.xlsx

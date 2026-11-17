@@ -28,3 +28,14 @@ python fpl_prize_page.py          # league mặc định 141084
 ```
 
 Script lấy dữ liệu từ API công khai của FPL, tính thưởng theo luật của nhóm (tuần, tháng, lượt đi/về, cả mùa, bounty…) và ghi ra `index.html` từ `prize_template.html`. Không cần thư viện ngoài.
+
+## Công cụ khác
+
+[`tools/fpl_league_ranking.py`](tools/fpl_league_ranking.py): xếp hạng thành viên một Classic League theo thành tích các mùa trước
+(% thứ hạng trung bình của 4 mùa tốt nhất). Cần `requests`, `pandas`.
+
+```bash
+python tools/fpl_league_ranking.py <league_id>   # ghi ra fpl_league_<league_id>_ranking.csv
+```
+
+Kết quả CSV và sổ thưởng Excel có tên thành viên nên chỉ để ở `local/` trên máy (đã gitignore), không đưa lên repo public này.
